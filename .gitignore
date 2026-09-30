@@ -1,0 +1,5 @@
+.vercel
+.env*
+.DS_Store
+assets/css/full.css
+assets/css/slim.css
