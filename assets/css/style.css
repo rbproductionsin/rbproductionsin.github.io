@@ -244,6 +244,9 @@ body:has(.player.is-playing)::after { display: none; }
 /* Films that can't play inline drift slowly so every frame on the page feels alive. */
 @keyframes drift { from { transform: scale(calc(var(--z, 1) * 1.04)); } to { transform: scale(calc(var(--z, 1) * 1.16)); } }
 .is-drifting > img { animation: drift 16s ease-in-out infinite alternate; }
+/* A film still waiting for its preview drifts gently from the moment it arrives, then dissolves into the film. */
+@keyframes warm-drift { from { transform: scale(calc(var(--z, 1) * 1.04)); } to { transform: scale(calc(var(--z, 1) * 1.1)); } }
+.tile__media.is-warming:not(.is-previewing) > img { animation: warm-drift 9s ease-in-out infinite alternate; }
 
 .tile__cap { display: grid; grid-template-columns: auto minmax(0, 1fr) auto; align-items: baseline; column-gap: 16px; padding-top: 18px; }
 .tile__num { font: 500 11px/1 var(--sans); letter-spacing: .2em; color: var(--muted); }
@@ -270,6 +273,11 @@ body:has(.player.is-playing)::after { display: none; }
 .film-grid--editorial .tile:nth-child(5n+4) .tile__cap { grid-template-columns: auto minmax(0, 1fr); row-gap: 8px; }
 .film-grid--editorial .tile:nth-child(5n+2) .tile__meta,
 .film-grid--editorial .tile:nth-child(5n+4) .tile__meta { grid-column: 2; text-align: left; }
+/* Home portfolio: every tile keeps the films' own widescreen frame, so faces and hands are never cropped away. */
+.film-grid--landscape .tile:nth-child(n) .tile__media { aspect-ratio: 16 / 9; }
+.film-grid--landscape .tile:nth-child(5n+2) { grid-column: 8 / 13; }
+.film-grid--landscape .tile:nth-child(5n+3) { grid-column: 3 / 11; }
+.film-grid--landscape .tile:nth-child(5n+4) { grid-column: 1 / 7; }
 
 .film-grid--uniform { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); column-gap: clamp(16px, 2.4vw, 40px); row-gap: clamp(56px, 6vw, 96px); align-items: start; padding: 0 var(--pad) calc(clamp(96px, 12vw, 180px) + clamp(0px, 8vw, 140px)); }
 .film-grid--uniform .tile:nth-child(even) { translate: 0 clamp(0px, 8vw, 140px); }
@@ -553,6 +561,7 @@ body:has(.player.is-playing)::after { display: none; }
   .scroll-cue { display: none; }
   .film-grid--editorial .tile { grid-column: 1 / -1 !important; margin-top: 0 !important; }
   .film-grid--editorial .tile .tile__media { aspect-ratio: 4 / 3 !important; }
+  .film-grid--landscape .tile .tile__media { aspect-ratio: 16 / 9 !important; }
   .film-grid--uniform { grid-template-columns: 1fr; padding-bottom: clamp(96px, 12vw, 180px); }
   .film-grid--uniform .tile:nth-child(even) { translate: none; }
   .tile__cap { grid-template-columns: auto minmax(0, 1fr); row-gap: 8px; }
@@ -586,7 +595,7 @@ body:has(.player.is-playing)::after { display: none; }
 
 .footer__bottom .motion-btn { font: inherit; letter-spacing: inherit; text-transform: inherit; color: inherit; transition: color .3s; }
 .motion-btn:hover { color: var(--ink); }
-.motion-off .hero__poster, .motion-off .marquee__track, .motion-off body::after, .motion-off .scroll-cue::after, .motion-off .is-drifting > img { animation-play-state: paused; }
+.motion-off .hero__poster, .motion-off .marquee__track, .motion-off body::after, .motion-off .scroll-cue::after, .motion-off .is-drifting > img, .motion-off .is-warming > img { animation-play-state: paused; }
 
 @media (hover: none) {
   .film-index:hover a { opacity: 1; }
@@ -610,7 +619,7 @@ body:has(.player.is-playing)::after { display: none; }
   *, *::before, *::after { animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; transition-delay: 0s !important; }
   body::after { animation: none; }
   .marquee__track { animation: none; }
-  .is-drifting > img { animation: none; }
+  .is-drifting > img, .is-warming > img { animation: none; }
   .hero__motion { display: none; }
   .reveals-on .reveal, .reveals-on .tile.reveal .tile__media { opacity: 1; transform: none; clip-path: none; }
 }
@@ -645,11 +654,13 @@ body:has(.player.is-playing)::after { display: none; }
   .film-grid--editorial .tile:nth-child(5n+2) .tile__media::before,
   .film-grid--editorial .tile:nth-child(5n+4) .tile__media::before { padding-top: 125%; }
   .film-grid--editorial .tile:nth-child(5n+3) .tile__media::before { padding-top: 45.45%; }
+  .film-grid--landscape .tile:nth-child(n) .tile__media::before { padding-top: 56.25%; }
   .reel-btn__ring { width: 58px; height: 58px; }
   .player__disc { width: 96px; height: 96px; }
   .lightbox__frame { width: 92vw; height: 51.75vw; }
   @media (max-width: 760px) {
     .film-grid--editorial .tile .tile__media::before { padding-top: 75% !important; }
+    .film-grid--landscape .tile .tile__media::before { padding-top: 56.25% !important; }
     .about-wide::before { padding-top: 75%; }
   }
 }

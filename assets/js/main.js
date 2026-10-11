@@ -346,6 +346,7 @@
       return;
     }
     if (!('IntersectionObserver' in window)) return;
+    host.classList.add('is-warming');
     previewObserver = previewObserver || new IntersectionObserver(entries => {
       entries.forEach(entry => {
         const s = previews.get(entry.target);
