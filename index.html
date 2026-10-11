@@ -40,7 +40,7 @@
           var bw = window.BW || {}, s = bw.studio || {}, films = bw.films || [], c = navigator.connection || {};
           var f = films.filter(function (x) { return x.slug === s.heroFilm; })[0] || films[0];
           var css = window.CSS && CSS.supports;
-          if (!f || f.clip || f.embed === false || c.saveData || /(^|-)2g$|^3g$/.test(c.effectiveType || '') ||
+          if (!f || f.clip || f.embed === false || c.saveData || /(^|-)2g$/.test(c.effectiveType || '') ||
               matchMedia('(prefers-reduced-motion: reduce)').matches || !css || !CSS.supports('width: 1cqw') || !CSS.supports('translate: 1px')) return;
           var start = Number(s.heroStart) || 0;
           var q = 'autoplay=1&mute=1&controls=0&playsinline=1&rel=0&modestbranding=1&disablekb=1&iv_load_policy=3&fs=0&cc_load_policy=0' +

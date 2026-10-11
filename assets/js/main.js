@@ -12,7 +12,10 @@
   const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   const finePointer = window.matchMedia('(hover: hover) and (pointer: fine)').matches;
   const connection = navigator.connection || {};
-  const slowNetwork = /(^|-)2g$|^3g$/.test(connection.effectiveType || '');
+  // Only genuinely slow 2G switches film off. Chrome labels many high-latency Indian broadband and 4G links "3g",
+  // so those still get film — just fewer players at once and fetched closer to the screen.
+  const slowNetwork = /(^|-)2g$/.test(connection.effectiveType || '');
+  const modestNetwork = connection.effectiveType === '3g';
   const cssOk = q => !!(window.CSS && CSS.supports && CSS.supports(q));
   const motionVideo = !reduceMotion && !connection.saveData && !slowNetwork && cssOk('width: 1cqw') && cssOk('translate: 1px');
 
@@ -206,7 +209,7 @@
 
   // Films near the viewport get a muted player that keeps playing just off-screen, so by the time a still
   // scrolls into view its film is already clean and dissolves in straight away.
-  const MAX_ALIVE = finePointer ? 5 : 3;
+  const MAX_ALIVE = modestNetwork ? 2 : finePointer ? 5 : 3;
   // On the home page the hero film gets the connection first; tile players wait until it is showing.
   let previewsOpen = true;
   const openPreviews = () => { if (previewsOpen) return; previewsOpen = true; updatePreviews(); };
@@ -356,7 +359,7 @@
         if (s) s.near = entry.isIntersecting;
       });
       updatePreviews();
-    }, { rootMargin: finePointer ? '250% 0px 250% 0px' : '100% 0px 100% 0px' });
+    }, { rootMargin: modestNetwork ? '50% 0px 50% 0px' : finePointer ? '250% 0px 250% 0px' : '100% 0px 100% 0px' });
     previews.set(host, { host, f, ratio: 0, near: false, disabled: false, layer: null, player: null, video: null, loop: null, ready: false });
     previewObserver.observe(host);
     warmObserver.observe(host);
@@ -1053,12 +1056,12 @@
         if (playing && playing.catch) playing.catch(() => {});
       } else if (!video.paused) video.pause();
     });
-    // Start fetching two screens ahead, so a film is already moving by the time it scrolls in.
+    // Start fetching ahead, so a film is already moving by the time it scrolls in.
     const warm = new IntersectionObserver(entries => entries.forEach(e => {
       if (!e.isIntersecting) return;
       load($('video', e.target));
       warm.unobserve(e.target);
-    }), { rootMargin: '200% 0px' });
+    }), { rootMargin: modestNetwork ? '60% 0px' : '200% 0px' });
     const seen = new IntersectionObserver(entries => {
       entries.forEach(e => { if (e.isIntersecting) visible.add(e.target); else visible.delete(e.target); });
       sync();
