@@ -1,7 +1,7 @@
 {
   "headers": [
-    { "source": "/assets/(stills|fonts|img)/(.*)", "headers": [{ "key": "Cache-Control", "value": "public, max-age=2592000, stale-while-revalidate=604800" }] },
+    { "source": "/assets/(stills|fonts|img|media)/(.*)", "headers": [{ "key": "Cache-Control", "value": "public, max-age=2592000, stale-while-revalidate=604800" }] },
     { "source": "/assets/(css|js)/(.*)", "headers": [{ "key": "Cache-Control", "value": "public, max-age=600, stale-while-revalidate=86400" }] },
-    { "source": "/assets/favicon.svg", "headers": [{ "key": "Cache-Control", "value": "public, max-age=2592000" }] }
+    { "source": "/assets/(wordmark.png|wordmark.webp|wordmark-lg.png|wordmark-lg.webp|og-image.jpg|favicon-32.png|favicon-192.png|apple-touch-icon.png)", "headers": [{ "key": "Cache-Control", "value": "public, max-age=2592000" }] }
   ]
 }

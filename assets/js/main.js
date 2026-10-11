@@ -369,9 +369,6 @@
 
   /* ---------- Shared chrome ---------- */
 
-  const [brandA, ...brandRest] = String(studio.name || '').split(' ');
-  const brandB = brandRest.join(' ');
-
   const NAV = [
     { href: 'index.html', label: 'Home', page: 'home' },
     { href: 'films.html', label: 'Films', page: 'films' },
@@ -390,7 +387,7 @@
       <a class="skip-link" href="#main" data-skip>Skip to content</a>
       <header class="site-header">
         <a class="brand" href="index.html" aria-label="${esc(studio.name)} — home">
-          <span class="brand__a">${esc(brandA)}</span><span class="brand__b">${esc(brandB)}</span>
+          <picture class="brand__word"><source srcset="assets/wordmark.webp" type="image/webp"><img src="assets/wordmark.png" alt="" width="186" height="44"></picture>
         </a>
         <nav class="top-nav" aria-label="Primary">
           ${NAV.map(n => `<a class="top-nav__link" href="${n.href}"${n.page === page ? ' aria-current="page"' : ''}>${n.label}</a>`).join('')}
@@ -438,7 +435,9 @@
           </nav>
           ${socials ? `<div class="footer__col"><h2 class="eyebrow">Follow</h2>${socials}</div>` : ''}
         </div>
-        <p class="footer__word" aria-hidden="true">${esc(brandA)} <em>${esc(brandB)}</em></p>
+        <div class="footer__brand" aria-hidden="true">
+          <picture class="footer__word"><source srcset="assets/wordmark-lg.webp" type="image/webp"><img src="assets/wordmark-lg.png" alt="" width="1187" height="281" loading="lazy" decoding="async"></picture>
+        </div>
         <div class="footer__bottom">
           <span>© ${new Date().getFullYear()} ${esc(studio.name)}</span>
           <span>${esc(studio.tagline)}</span>
@@ -672,13 +671,14 @@
 
   /* ---------- Film markup ---------- */
 
-  const tileHTML = f => `
+  const tileHTML = (f, { kicker = false, num = numberOf(f) } = {}) => `
     <a class="tile reveal" href="${filmHref(f)}" data-cursor="Watch">
       <figure class="tile__media">${imgHTML(f)}</figure>
       <span class="tile__cap">
-        <span class="tile__num">${numberOf(f)}</span>
+        <span class="tile__num">${num}</span>
         <span class="tile__title">${titleHTML(f.title)}</span>
         <span class="tile__meta">${esc(metaOf(f))}</span>
+        ${kicker && f.kicker ? `<span class="tile__kicker">${esc(f.kicker)}</span>` : ''}
       </span>
     </a>`;
 
@@ -788,8 +788,9 @@
   function renderHome() {
     const grid = $('[data-films="home"]');
     if (!grid) return;
-    const shown = films.slice(0, 5);
-    grid.innerHTML = shown.map(tileHTML).join('');
+    // The home portfolio shows only films that can play right here; the rest are on the Films page.
+    const shown = films.filter(f => f.clip || f.embed !== false).slice(0, 8);
+    grid.innerHTML = shown.map((f, i) => tileHTML(f, { kicker: true, num: pad2(i + 1) })).join('');
     $$('.tile__media', grid).forEach((host, i) => registerPreview(host, shown[i]));
     const count = $('[data-film-total]');
     if (count) count.textContent = pad2(films.length);
@@ -876,7 +877,7 @@
     const render = (announce = false) => {
       const shown = films.filter(f => cat === 'all' || slugify(f.category) === cat);
       if (revealObserver) [...$$('.reveal', grid), ...$$('.reveal', list)].forEach(el => revealObserver.unobserve(el));
-      grid.innerHTML = shown.map(tileHTML).join('');
+      grid.innerHTML = shown.map(f => tileHTML(f)).join('');
       list.innerHTML = shown.map(rowHTML).join('');
       grid.hidden = view !== 'grid';
       list.hidden = view !== 'index';
@@ -962,7 +963,7 @@
           <div><dt>Film</dt><dd>${esc(f.title)}</dd></div>
           <div><dt>Type</dt><dd>${esc(f.category)}</dd></div>
           ${f.place ? `<div><dt>Location</dt><dd>${esc(f.place)}</dd></div>` : ''}
-          ${f.channel ? `<div><dt>Originally released by</dt><dd>${esc(f.channel)}</dd></div>` : ''}
+          ${f.channel ? `<div><dt>${esc(f.creditLabel || 'Filmed for')}</dt><dd>${esc(f.channel)}</dd></div>` : ''}
           <div><dt>Watch</dt><dd><a href="${watchUrl(f)}" target="_blank" rel="noopener">YouTube ↗</a></dd></div>
         </dl>
       </section>
@@ -988,6 +989,19 @@
         player.classList.remove('is-playing');
         player.innerHTML = imgHTML(f, { cls: 'player__poster' }) + blockedHTML(f);
       }).then(p => { if (p) p.getIframe().focus(); });
+    });
+  }
+
+  /* ---------- Studio facts and collaborators ---------- */
+
+  function fillFacts() {
+    const facts = BW.facts || [];
+    $$('[data-facts]').forEach(el => {
+      el.innerHTML = facts.map(x => `<div class="fact reveal"><dt class="eyebrow">${esc(x.label)}</dt><dd class="fact__value">${esc(x.value)}</dd></div>`).join('');
+    });
+    const studios = BW.workedWith || [];
+    $$('[data-worked-with]').forEach(el => {
+      el.innerHTML = studios.map(n => `<li>${esc(n)}</li>`).join('');
     });
   }
 
@@ -1017,6 +1031,55 @@
       applyStillVars(img, f);
       img.src = still(f);
     });
+  }
+
+  /* ---------- Product demos (self-hosted AI concept films) ---------- */
+
+  // Each card shows its opening frame as a still; the film streams in (faststart MP4 from the site itself), fades in
+  // once it is really playing and, a moment before the end, fades back to that same opening frame to loop seamlessly.
+  const DEMO_DIP = 0.8;
+
+  function initDemos() {
+    const cards = $$('[data-demo]');
+    // Reduced motion, data saver or a slow connection: the still stays and no film is downloaded.
+    if (!cards.length || reduceMotion || connection.saveData || slowNetwork || !('IntersectionObserver' in window)) return;
+    const visible = new Set();
+    const load = video => { if (!video.getAttribute('src')) { video.preload = 'auto'; video.src = video.dataset.src; } };
+    const sync = () => cards.forEach(card => {
+      const video = $('video', card);
+      if (visible.has(card) && !held()) {
+        load(video);
+        const playing = video.play();
+        if (playing && playing.catch) playing.catch(() => {});
+      } else if (!video.paused) video.pause();
+    });
+    // Start fetching two screens ahead, so a film is already moving by the time it scrolls in.
+    const warm = new IntersectionObserver(entries => entries.forEach(e => {
+      if (!e.isIntersecting) return;
+      load($('video', e.target));
+      warm.unobserve(e.target);
+    }), { rootMargin: '200% 0px' });
+    const seen = new IntersectionObserver(entries => {
+      entries.forEach(e => { if (e.isIntersecting) visible.add(e.target); else visible.delete(e.target); });
+      sync();
+    }, { threshold: 0.2 });
+    cards.forEach(card => {
+      const video = $('video', card);
+      video.muted = true;
+      video.addEventListener('playing', () => card.classList.add('is-playing'));
+      video.addEventListener('timeupdate', () => {
+        if (video.duration && video.currentTime > video.duration - DEMO_DIP) card.classList.add('is-dipping');
+      });
+      video.addEventListener('ended', () => { video.currentTime = 0; sync(); });
+      video.addEventListener('seeked', () => { if (video.currentTime < 1) card.classList.remove('is-dipping'); });
+      video.addEventListener('error', () => card.classList.remove('is-playing'));
+      warm.observe(card);
+      seen.observe(card);
+    });
+    document.addEventListener('bw:holds', sync);
+    // Some phones (e.g. iPhone in Low Power Mode) refuse to autoplay until the visitor first touches the page.
+    const retry = () => { sync(); ['pointerdown', 'keydown'].forEach(t => document.removeEventListener(t, retry, true)); };
+    ['pointerdown', 'keydown'].forEach(t => document.addEventListener(t, retry, true));
   }
 
   /* ---------- Contact ---------- */
@@ -1063,6 +1126,6 @@
 
   // One failing piece must never take the rest of the page down with it.
   [renderChrome, initMotionToggle, initMenu, initHeader, initTransitions, initCursor, initLightbox,
-    initHero, renderHome, initFilmsPage, initFilmPage, fillStills, fillFounder, initContact, observeReveals]
+    initHero, renderHome, initFilmsPage, initFilmPage, fillStills, fillFacts, fillFounder, initDemos, initContact, observeReveals]
     .forEach(fn => { try { fn(); } catch (err) { console.error(err); } });
 })();

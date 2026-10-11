@@ -1,10 +1,10 @@
 // Everything the site shows lives here. Add a film by adding one entry to `films`.
 window.BW = {
   studio: {
-    name: 'Banaras Weddings',
-    tagline: 'Wedding & pre-wedding films — India & abroad',
+    name: 'Banaras Productions',
+    tagline: 'Weddings, films & commercials — India & abroad',
     // Placeholder contact details — replace before sharing the site.
-    email: 'hello@banarasweddings.com',
+    email: 'hello@banarasproductions.com',
     phone: '',
     instagram: '',
     youtube: '',
@@ -14,6 +14,15 @@ window.BW = {
     heroStart: 415,
     heroEnd: 431
   },
+
+  // Studio facts shown in the portfolio sections (as provided by the founder).
+  facts: [
+    { value: '800+', label: 'Weddings filmed' },
+    { value: '28', label: 'Countries' },
+    { value: '2012', label: 'Filming since' },
+    { value: 'BBC', label: 'Associated with' }
+  ],
+  workedWith: ['Keeley Wedding Films', 'Mystic Studios', 'Aaron Obed Photography', 'Satyasaji', 'Paradise Visual Media', 'Surya Visual Media'],
 
   founder: {
     name: 'Retheesh P Raveendran',
@@ -87,6 +96,20 @@ window.BW = {
       channel: 'Keeley Wedding Films'
     },
     {
+      slug: 'ashwin-sonali',
+      youtube: 'qCJrAyBB2Iw',
+      previewStart: 9,
+      previewEnd: 37,
+      zoom: 1.39,
+      title: 'Ashwin & Sonali',
+      category: 'Wedding',
+      place: '',
+      kicker: 'From the Scenario Movies archive.',
+      note: 'Cinematic wedding highlights for Ashwin and Sonali, made under Scenario Movies — the studio that grew into Banaras Productions.',
+      channel: 'Scenario Movies',
+      creditLabel: 'Made by'
+    },
+    {
       slug: 'vivek-shruthika',
       youtube: 'WERx3LBCDco',
       embed: false,
@@ -124,6 +147,55 @@ window.BW = {
       kicker: 'A film in verse, for a sister.',
       note: 'A short poetry film about a sister’s love.',
       channel: 'Mystic Studios'
+    },
+    {
+      slug: 'dads-love',
+      youtube: '0_SLUBCPRX4',
+      still: 'maxres2',
+      previewStart: 63,
+      previewEnd: 98,
+      zoom: 1.34,
+      title: 'A Dad’s Love',
+      category: 'Poetry film',
+      place: '',
+      kicker: 'A film in verse, for a father.',
+      note: 'A short poetry film about a father’s love.',
+      channel: 'Mystic Studios'
+    },
+    {
+      slug: 'smrithi-prashanth',
+      youtube: 'ejvKF9N6ybc',
+      embed: false,
+      title: 'Smrithi & Prashanth',
+      category: 'Wedding',
+      place: 'Chennai',
+      kicker: 'A Tambrahm wedding in Chennai.',
+      note: 'Every ritual of a traditional Tamil Brahmin wedding in Chennai, and the people who made the day.',
+      channel: 'Mystic Studios'
+    },
+    {
+      slug: 'siddhant-saloni',
+      youtube: 'wSo9hisbjug',
+      embed: false,
+      still: 'maxres2',
+      title: 'Siddhant & Saloni',
+      category: 'Wedding',
+      place: '',
+      kicker: 'Sid’s Cherry Tale.',
+      note: 'A wedding teaser for Siddhant and Saloni — “Sid’s Cherry Tale”.',
+      channel: 'Aaron Obed Photography'
+    },
+    {
+      slug: 'anchit-shrada',
+      youtube: 'HeVCXDOCY_w',
+      embed: false,
+      still: 'maxres2',
+      title: 'Anchit & Shrada',
+      category: 'Wedding',
+      place: '',
+      kicker: 'Wedding highlights.',
+      note: 'The highlights of Anchit and Shrada’s wedding — the colour, the family and the dance floor.',
+      channel: 'Aaron Obed Photography'
     }
   ]
 };

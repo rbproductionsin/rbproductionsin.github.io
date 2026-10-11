@@ -101,9 +101,9 @@ body:has(.player.is-playing)::after { display: none; }
 .site-header.is-hidden { transform: translateY(-110%); }
 .site-header:has(:focus-visible) { transform: none; }
 .menu-open .site-header { transform: none; }
-.brand { display: inline-flex; flex-direction: column; line-height: 1; }
-.brand__a { font: italic 400 30px/.9 var(--serif); letter-spacing: -.01em; }
-.brand__b { font: 500 9.5px/1 var(--sans); letter-spacing: .5em; text-transform: uppercase; margin-top: 7px; padding-left: 1px; }
+.brand { display: inline-flex; align-items: center; line-height: 1; }
+.brand__word { flex: none; display: block; }
+.brand__word img { width: 186px; height: 44px; }
 .site-header__right { display: flex; align-items: center; gap: clamp(14px, 2.4vw, 32px); }
 .site-header { align-items: center; }
 .top-nav { display: flex; align-items: center; gap: clamp(18px, 2.6vw, 42px); margin: 0 clamp(18px, 2.8vw, 44px) 0 auto; transition: opacity .4s, visibility 0s; }
@@ -250,6 +250,7 @@ body:has(.player.is-playing)::after { display: none; }
 .tile__title { font: 400 clamp(24px, 2.3vw, 38px)/1.05 var(--serif); letter-spacing: -.01em; transition: transform .6s var(--ease-out); }
 .tile:hover .tile__title { transform: translateX(8px); }
 .tile__meta { font: 500 10.5px/1.4 var(--sans); letter-spacing: .18em; text-transform: uppercase; color: var(--muted); text-align: right; }
+.tile__kicker { grid-column: 2 / -1; margin-top: 8px; font: italic 300 clamp(17px, 1.35vw, 21px)/1.35 var(--serif); color: var(--ink-2); }
 
 .reveals-on .reveal { opacity: 0; transform: translateY(40px); transition: opacity 1.1s var(--ease-out), transform 1.3s var(--ease-out); }
 .reveals-on .reveal.is-in { opacity: 1; transform: none; }
@@ -386,6 +387,50 @@ body:has(.player.is-playing)::after { display: none; }
 .step__title { font: 400 clamp(26px, 2.6vw, 40px)/1.1 var(--serif); }
 .step__text { max-width: 48ch; color: var(--ink-2); }
 
+/* Studio facts and collaborators */
+.facts { grid-column: 1 / -1; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); column-gap: var(--gap); margin: clamp(48px, 6vw, 96px) 0 0; border-top: 1px solid var(--line); }
+.fact { padding-top: 22px; }
+.fact .eyebrow { display: block; }
+.fact__value { margin-top: 10px; font: 300 clamp(48px, 6vw, 96px)/1 var(--serif); letter-spacing: -.02em; color: var(--ink); }
+.facts--compact { margin: 0 0 28px; grid-template-columns: repeat(2, minmax(0, 1fr)); row-gap: 8px; }
+.facts--compact .fact__value { font-size: clamp(34px, 3.4vw, 52px); }
+.worked-with { list-style: none; padding: 0; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); column-gap: var(--gap); border-top: 1px solid var(--line); }
+.worked-with li { padding: clamp(16px, 1.8vw, 26px) 0; border-bottom: 1px solid var(--line); font: italic 300 clamp(24px, 2.4vw, 38px)/1.15 var(--serif); letter-spacing: -.01em; }
+.worked-with--compact { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+.worked-with--compact li { padding: 12px 0; font-size: clamp(18px, 1.5vw, 23px); color: var(--ink-2); }
+.worked-with__note { margin-top: 24px; font: 500 12px/1.4 var(--sans); letter-spacing: .22em; text-transform: uppercase; color: var(--muted); }
+.worked-with__note em { font: italic 400 22px/1 var(--serif); letter-spacing: 0; text-transform: none; color: var(--accent); }
+
+/* ---------- Product demos (AI concept films) ---------- */
+
+#product-demos { scroll-margin-top: 96px; }
+.demos__intro { max-width: 34ch; margin: 0 0 clamp(40px, 5vw, 72px); font: 300 clamp(26px, 2.8vw, 44px)/1.15 var(--serif); letter-spacing: -.01em; }
+.demos__intro em { color: var(--accent); }
+.demos { display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); column-gap: var(--gap); row-gap: 56px; align-items: start; }
+.demo { margin: 0; grid-column: 1 / 8; }
+.demo:nth-child(even) { grid-column: 8 / 13; margin-top: clamp(80px, 14vw, 240px); }
+.demo:nth-child(3) { grid-column: 2 / 7; }
+.demo:nth-child(4) { grid-column: 7 / 13; margin-top: clamp(60px, 10vw, 180px); }
+/* The film sits on its own opening frame and fades in once it is really playing, so no player UI is ever seen.
+   Kept at the film's own 16:9 and never zoomed, so Veo's small AI mark in the corner stays visible. */
+.demo__media { position: relative; overflow: hidden; aspect-ratio: 16 / 9; background: var(--bg-2); }
+.demo__media img, .demo__media video { position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; filter: saturate(.86) brightness(.9); transition: filter 1s var(--ease-out); }
+.demo__media video { opacity: 0; pointer-events: none; transition: opacity .9s ease, filter 1s var(--ease-out); }
+.demo.is-playing video { opacity: 1; }
+.demo.is-playing.is-dipping video { opacity: 0; transition-duration: .7s, 1s; }
+.demo:hover .demo__media img, .demo:hover .demo__media video { filter: none; }
+.portfolio-lead { row-gap: 24px; margin-bottom: clamp(56px, 7vw, 110px); align-items: end; }
+.portfolio-lead__text { grid-column: 1 / 9; font: 300 clamp(28px, 3vw, 48px)/1.15 var(--serif); letter-spacing: -.015em; }
+.portfolio-lead__text em { color: var(--accent); }
+.portfolio-lead__note { grid-column: 9 / 13; max-width: 38ch; color: var(--ink-2); }
+.portfolio-intro { row-gap: 40px; margin: clamp(40px, 5vw, 72px) 0 0; align-items: start; }
+.portfolio-quote { grid-column: 1 / 8; margin: 0; }
+.portfolio-quote p { font: italic 300 clamp(26px, 2.6vw, 42px)/1.25 var(--serif); letter-spacing: -.01em; }
+.portfolio-quote footer { margin-top: 22px; }
+.portfolio-quote [data-founder-name] { color: var(--ink); }
+.portfolio-side { grid-column: 9 / 13; }
+.portfolio-side__label { margin-bottom: 12px; }
+
 /* Founder */
 .founder { row-gap: 48px; padding: 0 var(--pad); align-items: end; scroll-margin-top: 120px; }
 .founder__media { grid-column: 1 / 6; }
@@ -450,8 +495,9 @@ body:has(.player.is-playing)::after { display: none; }
 .footer__col a:not(.footer__mail):hover { color: var(--ink); }
 .footer__mail { font: 300 clamp(28px, 3.4vw, 56px)/1.1 var(--serif); letter-spacing: -.01em; overflow-wrap: anywhere; background: linear-gradient(currentColor, currentColor) 0 100% / 0 1px no-repeat; transition: background-size .6s var(--ease-out); }
 .footer__mail:hover { background-size: 100% 1px; }
-.footer__word { margin: clamp(64px, 9vw, 140px) 0 clamp(40px, 5vw, 76px); font: 300 13vw/.8 var(--serif); letter-spacing: -.045em; white-space: nowrap; text-align: center; }
-.footer__word em { color: var(--accent); }
+.footer__brand { display: flex; justify-content: center; margin: clamp(64px, 9vw, 140px) 0 clamp(40px, 5vw, 76px); }
+.footer__word { width: min(100%, 760px); }
+.footer__word img { width: 100%; height: auto; }
 .footer__bottom { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 12px 32px; padding-top: 20px; border-top: 1px solid var(--line); font: 500 11px/1.4 var(--sans); letter-spacing: .16em; text-transform: uppercase; color: var(--muted); }
 .footer__bottom a { transition: color .3s; }
 .footer__bottom a:hover { color: var(--ink); }
@@ -489,6 +535,7 @@ body:has(.player.is-playing)::after { display: none; }
   .form, .contact__aside { grid-column: 1 / -1; }
   .founder__media, .founder__text, .founder-teaser__media, .founder-teaser__text { grid-column: 1 / -1; }
   .founder__media { max-width: 520px; }
+  .portfolio-quote, .portfolio-side, .portfolio-lead__text, .portfolio-lead__note { grid-column: 1 / -1; }
   .founder-teaser__media { max-width: 420px; width: 100%; }
 }
 
@@ -518,11 +565,20 @@ body:has(.player.is-playing)::after { display: none; }
   .step__text { grid-column: 1; }
   .about-wide { aspect-ratio: 4 / 3; }
   .footer__top { grid-template-columns: 1fr 1fr; }
+  .facts { grid-template-columns: repeat(2, minmax(0, 1fr)); row-gap: 18px; }
+  .worked-with { grid-template-columns: 1fr; }
+  .demo, .demo:nth-child(n) { grid-column: 1 / -1; margin-top: 0; }
+  .worked-with--compact { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .footer__col--wide { grid-column: 1 / -1; }
 }
 
 @media (max-width: 600px) {
   .form__grid { grid-template-columns: 1fr; }
+}
+
+/* Small phones (320–374px): a slightly smaller header wordmark. */
+@media (max-width: 374px) {
+  .brand__word img { width: 160px; height: 38px; }
   .section-head { flex-direction: column; gap: 12px; }
 }
 
@@ -568,13 +624,13 @@ body:has(.player.is-playing)::after { display: none; }
   .page, .film-hero { padding-top: 168px; }
   .hero__title, .cta__big, .next-film__title { font: 300 56px/.92 var(--serif); }
   .page-title { font: 300 58px/.9 var(--serif); }
-  .intro__text, .founder-teaser__line, .offer__title, .idx__title { font: 300 32px/1.1 var(--serif); }
+  .intro__text, .founder-teaser__line, .offer__title, .idx__title, .demos__intro, .portfolio-lead__text { font: 300 32px/1.1 var(--serif); }
   .founder__title { font: 300 46px/.95 var(--serif); }
   .tile__title, .lead, .film-info__text, .principle h3, .step__title, .contact__big, .footer__mail { font: 300 26px/1.2 var(--serif); }
   .film-hero__kicker, .contact__quote, .founder__facts dd { font: italic 300 22px/1.3 var(--serif); }
   .marquee__track span { font: italic 300 28px/1 var(--serif); }
   .menu__text { font: 300 44px/1 var(--serif); }
-  .footer__word { font: 300 13vw/.8 var(--serif); }
+  .footer__brand { margin: 96px 0 48px; }
   .field input, .field select, .field textarea { font: 300 21px/1.3 var(--serif); }
 }
 /* aspect-ratio unsupported: reserve each picture box's height with a padding-top spacer. */
@@ -582,6 +638,7 @@ body:has(.player.is-playing)::after { display: none; }
   .tile__media::before, .player::before, .about-lead__media::before, .about-wide::before,
   .founder__frame::before, .founder-teaser__media::before { content: ""; display: block; padding-top: 62.5%; }
   .player::before { padding-top: 56.25%; }
+  .demo__media::before { content: ""; display: block; padding-top: 56.25%; }
   .about-lead__media::before, .founder-teaser__media::before { padding-top: 125%; }
   .about-wide::before { padding-top: 42.857%; }
   .founder__frame::before { padding-top: 150%; }
