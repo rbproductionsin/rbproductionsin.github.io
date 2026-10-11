@@ -22,7 +22,7 @@ window.BW = {
     { value: '2012', label: 'Filming since' },
     { value: 'BBC', label: 'Associated with' }
   ],
-  workedWith: ['Keeley Wedding Films', 'Mystic Studios', 'Aaron Obed Photography', 'Satyasaji', 'Paradise Visual Media', 'Surya Visual Media'],
+  workedWith: ['Keeley Wedding Films', 'Mystic Studios', 'Aaron Obed Photography', 'Sabyasachi', 'Paradise Visual Media', 'Surya Visual Media'],
 
   founder: {
     name: 'Retheesh P Raveendran',
