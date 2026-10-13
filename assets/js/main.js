@@ -385,6 +385,21 @@
     .map(([label, url]) => `<a href="${esc(url)}" target="_blank" rel="noopener">${label} ↗</a>`)
     .join('');
   const telHref = n => `tel:${esc(String(n).replace(/\s+/g, ''))}`;
+  /** wa.me link with the opening message already typed; the visitor can edit
+   *  it before sending. On a film page it mentions the film they watched. */
+  const waLink = () => {
+    const film = page === 'film' ? bySlug(new URLSearchParams(location.search).get('f')) : null;
+    const text = film
+      ? `Hi Banaras Productions! I just watched “${film.title}” on your website and would love to talk about a film.`
+      : studio.whatsappMessage || '';
+    return `https://wa.me/${encodeURIComponent(studio.whatsapp)}${text ? `?text=${encodeURIComponent(text)}` : ''}`;
+  };
+  const addressLines = () => {
+    const a = studio.address;
+    return a ? [a.street, `${a.locality}, ${a.region} ${a.postalCode}`, a.country].filter(Boolean) : [];
+  };
+  const mapsHref = () => `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(addressLines().join(', '))}`;
+  const WA_ICON = '<svg viewBox="0 0 32 32" width="28" height="28" aria-hidden="true" focusable="false"><path fill="currentColor" d="M16.04 3C8.87 3 3.05 8.82 3.05 15.99c0 2.29.6 4.53 1.74 6.5L3 29l6.68-1.75a12.94 12.94 0 0 0 6.36 1.62h.01c7.17 0 12.99-5.82 12.99-12.99 0-3.47-1.35-6.73-3.8-9.18A12.9 12.9 0 0 0 16.04 3Zm0 23.68h-.01c-1.94 0-3.84-.52-5.5-1.5l-.39-.23-3.97 1.04 1.06-3.87-.26-.4a10.73 10.73 0 0 1-1.65-5.73c0-5.93 4.83-10.76 10.77-10.76 2.87 0 5.57 1.12 7.6 3.15a10.68 10.68 0 0 1 3.15 7.61c0 5.94-4.83 10.69-10.8 10.69Zm5.9-8.05c-.32-.16-1.91-.94-2.21-1.05-.3-.11-.51-.16-.73.16-.21.32-.83 1.05-1.02 1.27-.19.21-.38.24-.7.08-.32-.16-1.36-.5-2.59-1.6-.96-.85-1.6-1.91-1.79-2.23-.19-.32-.02-.5.14-.66.15-.14.32-.38.48-.56.16-.19.21-.32.32-.54.11-.21.05-.4-.03-.56-.08-.16-.73-1.75-1-2.4-.26-.63-.53-.54-.73-.55h-.62c-.21 0-.56.08-.86.4-.3.32-1.13 1.1-1.13 2.69 0 1.59 1.16 3.12 1.32 3.34.16.21 2.28 3.48 5.52 4.88.77.33 1.37.53 1.84.68.77.25 1.48.21 2.03.13.62-.09 1.91-.78 2.18-1.54.27-.75.27-1.4.19-1.54-.08-.13-.29-.21-.61-.37Z"/></svg>';
 
   function renderChrome() {
     document.body.insertAdjacentHTML('afterbegin', `
@@ -433,6 +448,11 @@
               : `<a class="footer__mail" href="contact.html">Get in touch</a>`}
             ${studio.phone ? `<a href="${telHref(studio.phone)}">${esc(studio.phone)}</a>` : ''}
           </div>
+          ${studio.address ? `<div class="footer__col">
+            <h2 class="eyebrow">Studio</h2>
+            <address class="footer__address">${addressLines().map(esc).join('<br>')}</address>
+            ${studio.whatsapp ? `<a href="${esc(waLink())}" target="_blank" rel="noopener">WhatsApp ↗</a>` : ''}
+          </div>` : ''}
           <nav class="footer__col" aria-label="Footer">
             <h2 class="eyebrow">Menu</h2>
             ${NAV.map(n => `<a href="${n.href}">${n.label}</a>`).join('')}
@@ -453,7 +473,15 @@
         <button class="lightbox__close" type="button" data-lightbox-close>Close <span aria-hidden="true">×</span></button>
         <div class="lightbox__frame" data-lightbox-frame></div>
       </div>
-      <div class="cursor" aria-hidden="true"><span class="cursor__label"></span></div>`);
+      <div class="cursor" aria-hidden="true"><span class="cursor__label"></span></div>
+      ${studio.whatsapp ? `<a class="wa-fab" href="${esc(waLink())}" target="_blank" rel="noopener" data-wa-fab
+          aria-label="Chat with ${esc(studio.name)} on WhatsApp">
+        <span class="wa-fab__label" aria-hidden="true">
+          <span class="wa-fab__title">Chat on WhatsApp</span>
+          <span class="wa-fab__sub">Ask us about your date</span>
+        </span>
+        <span class="wa-fab__icon">${WA_ICON}</span>
+      </a>` : ''}`);
   }
 
   // Everything behind a modal layer (menu or lightbox) becomes inert while it is open.
@@ -1009,6 +1037,50 @@
     });
   }
 
+  /* ---------- Countries ---------- */
+
+  /** "India · the UK · Dubai … and 20 more countries", from data.js. */
+  function fillCountries() {
+    const list = BW.countries || [];
+    if (!list.length) return;
+    const more = Math.max(0, (BW.countriesTotal || 0) - list.length);
+    $$('[data-countries]').forEach(el => {
+      // The visual dots are decoration; screen readers get commas instead.
+      const items = list.map(esc).concat(more ? [`and ${more} more`] : []);
+      el.innerHTML = items.map((c, i) => `<span class="country${i === list.length ? ' country--more' : ''}">${c}${i < items.length - 1 ? '<span class="sr-only">,</span>' : ''}</span>`).join(' ');
+    });
+  }
+
+  /* ---------- WhatsApp ---------- */
+
+  /** The floating chat button. On the home page it waits until the hero film
+   *  has scrolled away, so it never sits on the opening shot; once per visit it
+   *  briefly shows its label, then tucks back to the icon. */
+  function initWhatsApp() {
+    const fab = $('[data-wa-fab]');
+    if (!fab) return;
+    const show = () => fab.classList.add('is-visible');
+    const hero = $('[data-hero]');
+    if (hero && 'IntersectionObserver' in window) {
+      new IntersectionObserver(([e]) => fab.classList.toggle('is-visible', !e.isIntersecting || e.intersectionRatio < 0.35),
+        { threshold: [0, 0.35, 1] }).observe(hero);
+    } else {
+      setTimeout(show, 600);
+    }
+    let peeked = false;
+    try { peeked = sessionStorage.getItem('bw-wa-peek') === '1'; } catch (err) { /* storage unavailable */ }
+    if (peeked || reduceMotion) return;
+    const peek = () => {
+      if (!fab.classList.contains('is-visible')) return;
+      fab.classList.add('is-peeking');
+      try { sessionStorage.setItem('bw-wa-peek', '1'); } catch (err) { /* storage unavailable */ }
+      setTimeout(() => fab.classList.remove('is-peeking'), 4200);
+      clearInterval(waiter);
+    };
+    const waiter = setInterval(peek, 1500);
+    setTimeout(() => clearInterval(waiter), 60000);
+  }
+
   /* ---------- Founder ---------- */
 
   function fillFounder() {
@@ -1101,6 +1173,15 @@
     fill('[data-studio-email]', studio.email, `mailto:${studio.email}`);
     fill('[data-studio-phone]', studio.phone, `tel:${String(studio.phone).replace(/\s+/g, '')}`);
     fill('[data-studio-instagram]', studio.instagram, studio.instagram);
+    $$('[data-studio-whatsapp]').forEach(el => {
+      if (!studio.whatsapp) { const row = el.closest('[data-contact-row]'); if (row) row.remove(); return; }
+      el.innerHTML = `${WA_ICON}<span>Chat with us</span>`;
+      el.href = waLink();
+    });
+    $$('[data-studio-address]').forEach(el => {
+      if (!studio.address) { const row = el.closest('[data-contact-row]'); if (row) row.remove(); return; }
+      el.innerHTML = `${addressLines().map(esc).join('<br>')}<a class="link-arrow contact__map" href="${esc(mapsHref())}" target="_blank" rel="noopener">Get directions</a>`;
+    });
 
     form.addEventListener('submit', e => {
       e.preventDefault();
@@ -1130,6 +1211,6 @@
 
   // One failing piece must never take the rest of the page down with it.
   [renderChrome, initMotionToggle, initMenu, initHeader, initTransitions, initCursor, initLightbox,
-    initHero, renderHome, initFilmsPage, initFilmPage, fillStills, fillFacts, fillFounder, initDemos, initContact, observeReveals]
+    initHero, renderHome, initFilmsPage, initFilmPage, fillStills, fillFacts, fillCountries, fillFounder, initWhatsApp, initDemos, initContact, observeReveals]
     .forEach(fn => { try { fn(); } catch (err) { console.error(err); } });
 })();

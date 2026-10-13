@@ -3,9 +3,23 @@ window.BW = {
   studio: {
     name: 'Banaras Productions',
     tagline: 'Weddings, films & commercials — India & abroad',
-    // Placeholder contact details — replace before sharing the site.
+    // The email is still a placeholder — replace before sharing the site.
     email: 'hello@banarasproductions.com',
-    phone: '',
+    phone: '+91 79074 67317',
+    // WhatsApp: the same number in international form, digits only, and the
+    // message a chat opens with (the visitor can edit it before sending).
+    whatsapp: '917907467317',
+    whatsappMessage: 'Hi Banaras Productions! I found you through your website and would love to talk about a film.',
+    // The studio's registered address. Shown on Contact and in the footer, and
+    // given to search engines as the business address.
+    address: {
+      street: 'Riyas Nivas, Kunnathery Thikavu',
+      locality: 'Aluva',
+      region: 'Kerala',
+      postalCode: '683106',
+      country: 'India',
+      countryCode: 'IN'
+    },
     instagram: '',
     youtube: '',
     heroFilm: 'setarah-max',
@@ -20,8 +34,13 @@ window.BW = {
     { value: '800+', label: 'Weddings filmed' },
     { value: '28', label: 'Countries' },
     { value: '2012', label: 'Filming since' },
-    { value: 'BBC', label: 'Associated with' }
+    { value: '6', label: 'Studios filmed for' }
   ],
+  // Where the founder has filmed. Shown as "Filmed in …" with the rest of the
+  // 28 counted as "more countries".
+  countries: ['India', 'the UK', 'Dubai', 'Singapore', 'Sri Lanka', 'Malaysia', 'Germany', 'France'],
+  countriesTotal: 28,
+
   workedWith: ['Keeley Wedding Films', 'Mystic Studios', 'Aaron Obed Photography', 'Sabyasachi', 'Paradise Visual Media', 'Surya Visual Media'],
 
   founder: {

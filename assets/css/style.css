@@ -491,6 +491,10 @@ body:has(.player.is-playing)::after { display: none; }
 .contact__aside .eyebrow { margin-bottom: 12px; }
 .contact__big { font: 300 clamp(24px, 2.4vw, 38px)/1.2 var(--serif); overflow-wrap: anywhere; background: linear-gradient(currentColor, currentColor) 0 100% / 0 1px no-repeat; transition: background-size .6s var(--ease-out), color .3s; }
 .contact__big:hover { background-size: 100% 1px; color: var(--accent); }
+.contact__address { font: 300 clamp(20px, 1.8vw, 26px)/1.4 var(--serif); font-style: normal; color: var(--ink-2); }
+.contact__map { display: flex; width: fit-content; margin-top: 14px; font-size: 12px; }
+.contact__wa { display: inline-flex; align-items: center; gap: 12px; }
+.contact__wa svg { color: #25D366; flex: none; }
 .contact__quote { padding-top: 28px; border-top: 1px solid var(--line); font: italic 300 clamp(22px, 2vw, 30px)/1.3 var(--serif); color: var(--ink-2); }
 
 /* ---------- Footer ---------- */
@@ -500,6 +504,7 @@ body:has(.player.is-playing)::after { display: none; }
 .footer__col { display: flex; flex-direction: column; align-items: flex-start; gap: 10px; }
 .footer__col .eyebrow { margin-bottom: 10px; }
 .footer__col a:not(.footer__mail) { color: var(--ink-2); transition: color .3s; }
+.footer__address { font-style: normal; color: var(--ink-2); line-height: 1.6; }
 .footer__col a:not(.footer__mail):hover { color: var(--ink); }
 .footer__mail { font: 300 clamp(28px, 3.4vw, 56px)/1.1 var(--serif); letter-spacing: -.01em; overflow-wrap: anywhere; background: linear-gradient(currentColor, currentColor) 0 100% / 0 1px no-repeat; transition: background-size .6s var(--ease-out); }
 .footer__mail:hover { background-size: 100% 1px; }
@@ -667,3 +672,54 @@ body:has(.player.is-playing)::after { display: none; }
 /* Shown only when JavaScript is off or blocked, so every page can still be navigated. */
 .noscript-nav { position: relative; z-index: 60; display: flex; flex-wrap: wrap; gap: 18px; padding: 18px; font: 500 12px/1.4 var(--sans); letter-spacing: .2em; text-transform: uppercase; }
 .noscript-nav a { color: var(--ink); }
+
+/* ---------- Filmed in ---------- */
+
+.countries-band { grid-column: 1 / -1; display: grid; grid-template-columns: minmax(0, 3fr) minmax(0, 9fr); column-gap: var(--gap); align-items: baseline; margin-top: clamp(36px, 4vw, 64px); padding-top: clamp(24px, 2.4vw, 36px); border-top: 1px solid var(--line); }
+.countries { margin: 0; font: italic 300 clamp(26px, 3.1vw, 50px)/1.25 var(--serif); letter-spacing: -.01em; color: var(--ink); }
+.country { white-space: nowrap; }
+/* The dot belongs to the country before it, so a wrapped line never starts with one. */
+.country:not(:last-child)::after { content: "·"; display: inline-block; margin: 0 .38em; color: var(--accent); font-style: normal; }
+.country--more { color: var(--accent); }
+.countries--compact { margin: 0 0 22px; font-size: clamp(19px, 1.6vw, 24px); color: var(--ink-2); }
+@media (max-width: 760px) { .countries-band { grid-template-columns: 1fr; row-gap: 12px; } }
+
+/* ---------- WhatsApp ---------- */
+
+.wa-fab {
+  position: fixed; z-index: 90; right: 20px; bottom: 20px;
+  right: max(20px, env(safe-area-inset-right)); bottom: max(20px, env(safe-area-inset-bottom));
+  display: flex; align-items: center; gap: 12px; color: var(--ink);
+  opacity: 0; transform: translateY(18px) scale(.9); pointer-events: none;
+  transition: opacity .5s var(--ease-out), transform .6s var(--ease-out);
+}
+.wa-fab.is-visible { opacity: 1; transform: none; pointer-events: auto; }
+.menu-open .wa-fab, .lightbox-open .wa-fab { opacity: 0; pointer-events: none; transform: translateY(18px) scale(.9); }
+.wa-fab__icon {
+  position: relative; display: grid; place-items: center; width: 60px; height: 60px; border-radius: 50%; color: #fff;
+  background: radial-gradient(circle at 30% 25%, #4BE48A 0%, #25D366 45%, #128C7E 100%);
+  box-shadow: 0 10px 30px rgba(18, 140, 126, .45), inset 0 1px 0 rgba(255, 255, 255, .35), 0 0 0 1px rgba(255, 255, 255, .08);
+  transition: transform .5s var(--ease-out), box-shadow .5s;
+}
+/* A slow ring, like a phone quietly buzzing — never a frantic blink. */
+.wa-fab__icon::after {
+  content: ""; position: absolute; top: 0; right: 0; bottom: 0; left: 0; border-radius: 50%; box-shadow: 0 0 0 0 rgba(37, 211, 102, .55);
+  animation: wa-ring 3.2s ease-out 1.5s infinite;
+}
+@keyframes wa-ring { 0% { box-shadow: 0 0 0 0 rgba(37, 211, 102, .5); } 70%, 100% { box-shadow: 0 0 0 18px rgba(37, 211, 102, 0); } }
+.wa-fab__label {
+  display: grid; gap: 3px; padding: 12px 18px; border-radius: 18px 18px 6px 18px; white-space: nowrap;
+  background: rgba(16, 13, 11, .86); -webkit-backdrop-filter: blur(14px); backdrop-filter: blur(14px);
+  box-shadow: inset 0 0 0 1px var(--line-2), 0 12px 30px rgba(0, 0, 0, .35);
+  opacity: 0; transform: translateX(14px); transition: opacity .4s var(--ease-out), transform .5s var(--ease-out);
+  pointer-events: none;
+}
+.wa-fab__title { font: 500 12px/1 var(--sans); letter-spacing: .14em; text-transform: uppercase; color: var(--ink); }
+.wa-fab__sub { font: italic 300 17px/1.1 var(--serif); color: var(--accent); }
+.wa-fab:hover .wa-fab__label, .wa-fab:focus-visible .wa-fab__label, .wa-fab.is-peeking .wa-fab__label { opacity: 1; transform: none; }
+.wa-fab:hover .wa-fab__icon, .wa-fab:focus-visible .wa-fab__icon { transform: scale(1.06) rotate(-8deg); box-shadow: 0 14px 36px rgba(18, 140, 126, .6), inset 0 1px 0 rgba(255, 255, 255, .35); }
+.wa-fab:focus-visible { outline: none; }
+.wa-fab:focus-visible .wa-fab__icon { outline: 2px solid var(--accent); outline-offset: 4px; }
+.motion-off .wa-fab__icon::after { animation-play-state: paused; }
+@media (max-width: 760px) { .wa-fab__icon { width: 54px; height: 54px; } .wa-fab__label { display: none; } }
+@media (prefers-reduced-motion: reduce) { .wa-fab__icon::after { animation: none; } }
