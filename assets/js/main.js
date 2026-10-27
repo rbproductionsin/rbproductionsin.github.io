@@ -390,7 +390,7 @@
   const waLink = () => {
     const film = page === 'film' ? bySlug(new URLSearchParams(location.search).get('f')) : null;
     const text = film
-      ? `Hi Banaras Productions! I just watched “${film.title}” on your website and would love to talk about a film.`
+      ? `Hi RB Productions! I just watched “${film.title}” on your website and would love to talk about a film.`
       : studio.whatsappMessage || '';
     return `https://wa.me/${encodeURIComponent(studio.whatsapp)}${text ? `?text=${encodeURIComponent(text)}` : ''}`;
   };
@@ -406,7 +406,7 @@
       <a class="skip-link" href="#main" data-skip>Skip to content</a>
       <header class="site-header">
         <a class="brand" href="index.html" aria-label="${esc(studio.name)} — home">
-          <picture class="brand__word"><source srcset="assets/wordmark.webp" type="image/webp"><img src="assets/wordmark.png" alt="" width="186" height="44"></picture>
+          <picture class="brand__word"><source srcset="assets/wordmark.webp" type="image/webp"><img src="assets/wordmark.png" alt="" width="115" height="54"></picture>
         </a>
         <nav class="top-nav" aria-label="Primary">
           ${NAV.map(n => `<a class="top-nav__link" href="${n.href}"${n.page === page ? ' aria-current="page"' : ''}>${n.label}</a>`).join('')}
@@ -460,7 +460,7 @@
           ${socials ? `<div class="footer__col"><h2 class="eyebrow">Follow</h2>${socials}</div>` : ''}
         </div>
         <div class="footer__brand" aria-hidden="true">
-          <picture class="footer__word"><source srcset="assets/wordmark-lg.webp" type="image/webp"><img src="assets/wordmark-lg.png" alt="" width="1187" height="281" loading="lazy" decoding="async"></picture>
+          <picture class="footer__word"><source srcset="assets/wordmark-lg.webp" type="image/webp"><img src="assets/wordmark-lg.png" alt="" width="1278" height="600" loading="lazy" decoding="async"></picture>
         </div>
         <div class="footer__bottom">
           <span>© ${new Date().getFullYear()} ${esc(studio.name)}</span>

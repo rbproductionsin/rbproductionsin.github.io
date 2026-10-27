@@ -1,19 +1,19 @@
 // Everything the site shows lives here. Add a film by adding one entry to `films`.
 window.BW = {
   studio: {
-    name: 'Banaras Productions',
+    name: 'RB Productions',
     tagline: 'Weddings, films & commercials — India & abroad',
-    // The email is still a placeholder — replace before sharing the site.
-    email: 'hello@banarasproductions.com',
+    // The email is still a placeholder (no rbproductions.in mailbox yet) — replace before sharing the site.
+    email: 'hello@rbproductions.in',
     phone: '+91 79074 67317',
     // WhatsApp: the same number in international form, digits only, and the
     // message a chat opens with (the visitor can edit it before sending).
     whatsapp: '917907467317',
-    whatsappMessage: 'Hi Banaras Productions! I found you through your website and would love to talk about a film.',
+    whatsappMessage: 'Hi RB Productions! I found you through your website and would love to talk about a film.',
     // The studio's registered address. Shown on Contact and in the footer, and
     // given to search engines as the business address.
     address: {
-      street: 'Riyas Nivas, Kunnathery Thikavu',
+      street: 'RB Productions, Kunnathery Thikavu',
       locality: 'Aluva',
       region: 'Kerala',
       postalCode: '683106',
@@ -34,7 +34,7 @@ window.BW = {
     { value: '800+', label: 'Weddings filmed' },
     { value: '28', label: 'Countries' },
     { value: '2012', label: 'Filming since' },
-    { value: '6', label: 'Studios filmed for' }
+    { value: '6+', label: 'Studios filmed for' }
   ],
   // Where the founder has filmed. Shown as "Filmed in …" with the rest of the
   // 28 counted as "more countries".
@@ -124,7 +124,7 @@ window.BW = {
       category: 'Wedding',
       place: '',
       kicker: 'From the Scenario Movies archive.',
-      note: 'Cinematic wedding highlights for Ashwin and Sonali, made under Scenario Movies — the studio that grew into Banaras Productions.',
+      note: 'Cinematic wedding highlights for Ashwin and Sonali, made under Scenario Movies — the studio that grew into RB Productions.',
       channel: 'Scenario Movies',
       creditLabel: 'Made by'
     },

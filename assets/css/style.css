@@ -103,7 +103,7 @@ body:has(.player.is-playing)::after { display: none; }
 .menu-open .site-header { transform: none; }
 .brand { display: inline-flex; align-items: center; line-height: 1; }
 .brand__word { flex: none; display: block; }
-.brand__word img { width: 186px; height: 44px; }
+.brand__word img { width: 115px; height: 54px; }
 .site-header__right { display: flex; align-items: center; gap: clamp(14px, 2.4vw, 32px); }
 .site-header { align-items: center; }
 .top-nav { display: flex; align-items: center; gap: clamp(18px, 2.6vw, 42px); margin: 0 clamp(18px, 2.8vw, 44px) 0 auto; transition: opacity .4s, visibility 0s; }
@@ -407,6 +407,7 @@ body:has(.player.is-playing)::after { display: none; }
 .worked-with--compact { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 .worked-with--compact li { padding: 12px 0; font-size: clamp(18px, 1.5vw, 23px); color: var(--ink-2); }
 .worked-with__note { margin-top: 24px; font: 500 12px/1.4 var(--sans); letter-spacing: .22em; text-transform: uppercase; color: var(--muted); }
+.worked-with__more { margin: 14px 0 0; font: italic 300 18px/1.4 var(--serif); color: var(--ink-2); }
 .worked-with__note em { font: italic 400 22px/1 var(--serif); letter-spacing: 0; text-transform: none; color: var(--accent); }
 
 /* ---------- Product demos (AI concept films) ---------- */
@@ -509,7 +510,7 @@ body:has(.player.is-playing)::after { display: none; }
 .footer__mail { font: 300 clamp(28px, 3.4vw, 56px)/1.1 var(--serif); letter-spacing: -.01em; overflow-wrap: anywhere; background: linear-gradient(currentColor, currentColor) 0 100% / 0 1px no-repeat; transition: background-size .6s var(--ease-out); }
 .footer__mail:hover { background-size: 100% 1px; }
 .footer__brand { display: flex; justify-content: center; margin: clamp(64px, 9vw, 140px) 0 clamp(40px, 5vw, 76px); }
-.footer__word { width: min(100%, 760px); }
+.footer__word { width: min(100%, 440px); }
 .footer__word img { width: 100%; height: auto; }
 .footer__bottom { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 12px 32px; padding-top: 20px; border-top: 1px solid var(--line); font: 500 11px/1.4 var(--sans); letter-spacing: .16em; text-transform: uppercase; color: var(--muted); }
 .footer__bottom a { transition: color .3s; }
@@ -592,7 +593,7 @@ body:has(.player.is-playing)::after { display: none; }
 
 /* Small phones (320–374px): a slightly smaller header wordmark. */
 @media (max-width: 374px) {
-  .brand__word img { width: 160px; height: 38px; }
+  .brand__word img { width: 98px; height: 46px; }
   .section-head { flex-direction: column; gap: 12px; }
 }
 
